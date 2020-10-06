@@ -5,7 +5,7 @@ with open('pypi_desc.md') as f:
 
 setup(
     name='s3-extend',
-    version='1.13',
+    version='1.13.1',
     packages=[
       's3_extend',
       's3_extend.gateways'
@@ -25,6 +25,7 @@ setup(
             's3p = s3_extend.s3p:s3px',
             's3r = s3_extend.s3r:s3rx',
             's3rh= s3_extend.s3rh:s3rhx',
+            's3n = s3_extend.s3n:s3nx',
             'ardgw = s3_extend.gateways.arduino_gateway:arduino_gateway',
             'cpxgw = s3_extend.gateways.cpx_gateway:cpx_gateway',
             'espgw = s3_extend.gateways.esp8266_gateway:esp8266_gateway',
@@ -32,6 +33,7 @@ setup(
             'rpigw = s3_extend.gateways.rpi_gateway:rpi_gateway',
             'rhgw = s3_extend.gateways.robohat_gateway:robohat_gateway',
             'wsgw = s3_extend.gateways.ws_gateway:ws_gateway',
+            'nlgw = s3_extend.gateways.nl_gateway:nl_gateway',
         ]
     },
 
@@ -42,7 +44,7 @@ setup(
     description='A Non-Blocking Event Driven Applications Framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    keywords=['Scratch3', 'Arduino', 'ESP-8266', 'Raspberry Pi'],
+    keywords=['Scratch3', 'Arduino', 'ESP-8266', 'Raspberry Pi', 'Newland'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Other Environment',
