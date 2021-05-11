@@ -118,7 +118,6 @@ class WsGateway(BanyanBaseAIO):
                 self.event_loop.close()
                 sys.exit(0)
 
-
     async def wsg(self, websocket, path):
         """
         This method handles connections and will be used to send
@@ -130,7 +129,6 @@ class WsGateway(BanyanBaseAIO):
         self.wsocket = websocket
         # start up banyan
         await self.begin()
-
 
         # wait for a connection
         try:
@@ -236,11 +234,11 @@ def ws_gateway():
                                                                 "from_microbit_gateway"
                                                                 "from_picoboard_gateway"
                                                                 "from_cpx_gateway",
-                                                                nargs='+',
+                        nargs='+',
                         help="A space delimited list of topics")
-    parser.add_argument("-i", dest="server_ip_port", default="9000",
+    parser.add_argument("-i", dest="server_ip_port", default="9001",
                         help="Set the WebSocket Server IP Port number")
-    parser.add_argument("-l", dest="log", default="False",
+    parser.add_argument("-l", dest="log", default="True",
                         help="Set to True to turn logging on.")
     parser.add_argument("-n", dest="process_name", default="WebSocket Gateway",
                         help="Set process name in banner")
@@ -277,6 +275,9 @@ def ws_gateway():
     if sys.platform == 'win32':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
+    new_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(new_loop)
+
     loop = asyncio.get_event_loop()
 
     try:
@@ -289,11 +290,9 @@ def ws_gateway():
         sys.exit(0)
 
 
-
 def signal_handler(sig, frame):
     print('Exiting Through Signal Handler')
     raise KeyboardInterrupt
-
 
 
 # listen for SIGINT
