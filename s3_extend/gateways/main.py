@@ -19,26 +19,27 @@ class S3N2:
 
         time.sleep(1)
 
-        ww = threading.Thread(target=ws_gateway)
+        ww = threading.Thread(target=ws_gateway, daemon=True)
         # ww.setDaemon(True)
         ww.start()
         print('Websocket Gateway started')
 
         time.sleep(1)
 
-        nn = threading.Thread(target=nl_gateway)
+        nn = threading.Thread(target=nl_gateway, daemon=True)
         # nn.setDaemon(True)
         nn.start()
         print('Nl Gateway started ')
 
         time.sleep(1)
 
-        open_web = threading.Thread(target=self.open_web)
-        open_web.start()
-        print('open_web started ')
 
-        time.sleep(1)
-        print('*' * 10 + '程序启动完成' + '*' * 10)
+        # open_web = threading.Thread(target=self.open_web, daemon=True)
+        # open_web.start()
+        # print('open_web started ')
+        #
+        # time.sleep(1)
+        # print('*' * 10 + '程序启动完成' + '*' * 10)
 
     def open_web(self):
         from selenium import webdriver
@@ -59,6 +60,11 @@ def s3n2x():
     :return:
     """
     S3N2()
+    while True:
+        try:
+            time.sleep(.4)
+        except KeyboardInterrupt:
+            sys.exit(0)
 
 
 if __name__ == '__main__':

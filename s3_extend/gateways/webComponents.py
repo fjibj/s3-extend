@@ -13,13 +13,19 @@ import sys
 
 import cx_Oracle
 import pymysql
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 import time
 
 BROWSER_DICT = {}  # 存放浏览器
 DB_DICT = {}  # 存放数据库
 RESULT = {}  # 存放获取内容
+
+option = webdriver.ChromeOptions()
+# 防止打印一些无用的日志
+option.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])
 
 
 def catch_exception(func):
@@ -56,12 +62,13 @@ def init_driver(driver_name, url):
     '''
     初始化并访问url
     '''
-
-    # browser = webdriver.Chrome()# 本地
-    browser = webdriver.Chrome(sys._MEIPASS + '\\chromedriver.exe')
+    try:
+        browser = webdriver.Chrome(sys._MEIPASS + '\\chromedriver.exe', chrome_options=option)
+    except:
+        browser = webdriver.Chrome(chrome_options=option)  # 本地
     BROWSER_DICT[driver_name] = browser
     BROWSER_DICT[driver_name].get(url)
-    time.sleep(3)
+    # time.sleep(3)
 
 
 @catch_exception
@@ -96,9 +103,9 @@ def element_click(driver_name, xpath, num):
     点击
     '''
     browser = judge_driver(driver_name)
-    print('save cookie')
-    save_cookie(browser)
-    print('save cookie done')
+    # print('save cookie')
+    # save_cookie(browser)
+    # print('save cookie done')
     browser.find_element(By.XPATH, xpath).click()
     time.sleep(1 + int(num))
 
@@ -125,6 +132,22 @@ def element_get(driver_name, xpath, key):
 
     RESULT[key] = value
     print(RESULT)
+
+
+@catch_exception
+def area_api(num):
+    '''
+    根据手机号获取地区名称 苏州rpa需求
+    '''
+    num = 'http://10.41.114.83:7008/poineer/interface/oss/getMsisdnCounty.do?msisdn=' + num
+    county_name = requests.get(num).json().get('RETMESSAGE').get('COUNTYNAME')
+    return county_name
+
+
+@catch_exception
+def page_down(driver_name):
+    browser = judge_driver(driver_name)
+    browser.find_element(By.XPATH, '//*').send_keys(Keys.PAGE_DOWN)
 
 
 # @catch_exception
@@ -172,21 +195,15 @@ def element_put(driver_name, xpath, key):
     根据key 填入字符
     '''
     browser = judge_driver(driver_name)
-    print('save cookie')
-    save_cookie(browser)
-    print('save cookie done')
     browser.find_element(By.XPATH, xpath).send_keys(RESULT[key])
 
 
 @catch_exception
 def switch_frame(driver_name, xpath):
     '''
-    切换frame
+    切换frame并点击
     '''
     browser = judge_driver(driver_name)
-    print('save cookie')
-    save_cookie(browser)
-    print('save cookie done')
     iframes = browser.find_elements_by_tag_name('iframe')
     for iframe in iframes:
         try:
@@ -204,11 +221,8 @@ def switch_window(driver_name):
     切换到最后一个窗口
     '''
     browser = judge_driver(driver_name)
-    print('save cookie')
-    save_cookie(browser)
-    print('save cookie done')
     browser.switch_to.window(browser.window_handles[-1])
-    time.sleep(3)
+    time.sleep(1)
 
 
 class MysqlHandler():
@@ -429,7 +443,7 @@ if __name__ == '__main__':
 
     # url = 'https://www.baidu.com'
     url = 'http://new4a.js.cmcc/uac/web3/jsp/login/login.jsp'
-    url = 'web_build/index.html'
+    url = 'http://nguc.cs.cmos/nguc/ngucportal/login.html'
     driver_name = 'chrome01'
     init_driver(driver_name, url)
     # refresh_page(driver_name)

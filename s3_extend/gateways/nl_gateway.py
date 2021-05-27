@@ -22,6 +22,7 @@
 """
 import argparse
 import signal
+import threading
 from subprocess import run
 import sys
 import time
@@ -38,6 +39,8 @@ import xlwt
 # import webComponents
 
 from python_banyan.gateway_base import GatewayBase
+
+import multiprocessing as mul
 
 import zmq
 
@@ -80,12 +83,26 @@ class NlGateway(GatewayBase):
             logging.basicConfig(filename=fn, filemode='w', level=logging.DEBUG)
             sys.excepthook = self.my_handler
 
-        self.logger.debug("1111111111111")
+        print('进入 nl_gateway')
 
         # start the banyan receive loop
         try:
             self.receive_loop()
+            print('开启多进程')
         except KeyboardInterrupt:
+            self.clean_up()
+            sys.exit(0)
+
+        # threading.Thread.__init__(self)
+        # self.daemon = True
+
+    def run(self):
+        print(self.name)
+        try:
+            print('进入循环')
+            self.receive_loop()
+        except KeyboardInterrupt:
+            print('error')
             self.clean_up()
             sys.exit(0)
 
@@ -471,7 +488,8 @@ def nl_gateway():
         'log': log}
 
     try:
-        NlGateway(args.subscriber_list, **kw_options)
+        newSocket = NlGateway(args.subscriber_list, **kw_options)
+        # newSocket.start()
     except KeyboardInterrupt:
         sys.exit()
 

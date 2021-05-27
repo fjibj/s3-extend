@@ -5,7 +5,7 @@ block_cipher = None
 a = Analysis(['main.py'],
              pathex=['D:\\PyCharmProjects_WIN\\RPA\\s3-extend\\s3_extend\\gateways'],
              binaries=[('.\\chromedriver.exe','.'),],
-             datas=[('D:\\PyCharmProjects_WIN\\RPA\\s3-extend\\s3_extend\\gateways\\web_build','web_build')],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -29,4 +29,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=True , icon='icon.ico')
